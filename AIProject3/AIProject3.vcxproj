@@ -82,7 +82,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\CpuPlayer\CpuPlayer.cpp" />
+    <ClCompile Include="src\Game\Game.cpp" />
+    <ClCompile Include="src\HumanPlayer\HumanPlayer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CpuPlayer\CpuPlayer.h" />
+    <ClInclude Include="src\Game\Game.h" />
+    <ClInclude Include="src\HumanPlayer\HumanPlayer.h" />
+    <ClInclude Include="src\Move\Move.h" />
+    <ClInclude Include="src\Player\Player.h" />
+    <ClInclude Include="src\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
