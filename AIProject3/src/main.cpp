@@ -5,13 +5,11 @@
 #include "HumanPlayer/HumanPlayer.h"
 
 int main() {
-	Game game(5,5, std::make_shared<HumanPlayer>(), std::make_shared<HumanPlayer>());
+	Game game(8, 8, std::make_shared<HumanPlayer>(), std::make_shared<HumanPlayer>());
 	
 	while (!game.IsEnded()) {
-		std::cout << "===============" << std::endl;
 		game.Render();
 		game.Input();
-		std::cout << "===============" << std::endl;
 	}
 	
 	return 0;

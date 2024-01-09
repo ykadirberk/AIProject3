@@ -30,11 +30,16 @@ Game::~Game() {
 }
 
 void Game::Render() {
+	std::cout << "--------------------------" << std::endl;
+	std::cout << player1->GetName() << " score: " << m_Player1Score << std::endl;
+	std::cout << player2->GetName() << " score: " << m_Player2Score << std::endl;
+	std::cout << "--------------------------" << std::endl;
+
 	int colnums = 1;
-	std::cout << "  ";
+	std::cout << " ";
 	for (int i = 0; i < m_Width * 2 + 1; i++) {
 		if (i % 2 == 0) {
-			std::cout << ' ';
+			std::cout << "   ";
 			continue;
 		}
 		std::cout << colnums;
@@ -44,20 +49,20 @@ void Game::Render() {
 
 	for (int row = 0; row < m_Height * 2 + 1; row++) {
 		if (row % 2 == 0) {
-			for (int i = 0; i < m_Width * 2 + 3; i++) {
-				std::cout << '-';
+			for (int i = 0; i < m_Width * 2 + 2; i++) {
+				std::cout << "- ";
 			}
 			std::cout << std::endl;
 			continue;
 		}
 		for (int col = 0; col < m_Width * 2 + 1; col++) {
 			if (col == 0) {
-				std::cout << (((row - 1) / 2) + 1) << ' ';
+				std::cout << (((row - 1) / 2) + 1) << " ";
 			}
 			if (col % 2 == 0) {
-				std::cout << '|';
+				std::cout << "| ";
 			} else {
-				std::cout << Move::CastKey(m_Map[(m_Width) * ((row - 1) / 2) + ((col - 1) / 2)]);
+				std::cout << Move::CastKey(m_Map[(m_Width) * ((row - 1) / 2) + ((col - 1) / 2)]) << " ";
 			}
 		}
 		std::cout << std::endl;
@@ -70,6 +75,7 @@ void Game::Input() {
 			std::cout << player1->GetName() << " >> " << std::endl;
 			auto move = player1->MakeMove();
 			if (Apply(move)) {
+				m_Player1Score += CheckForSOS();
 				break;
 			} else {
 				std::cout << "The positions provided by you are either invalid or that place is already used." << std::endl;
@@ -80,6 +86,7 @@ void Game::Input() {
 			std::cout << player2->GetName() << " >> " << std::endl;
 			auto move = player2->MakeMove();
 			if (Apply(move)) {
+				m_Player2Score += CheckForSOS();
 				break;
 			}
 			else {
@@ -121,9 +128,159 @@ int Game::CheckForSOS() {
 
 	for (int row = 0; row < m_Height; row++) {
 		for (int col = 0; col < m_Width; col++) {
-			if (m_Map[(m_Width)*row + col] != KEY_S);
+			if (m_Map[(m_Width)*row + col] != KEY_S) {
+				continue;
+			}
+
+			if (VerticalSos(row, col)) {
+				points++;
+			}
+
+			if (HorizontalSos(row, col)) {
+				points++;
+			}
+
+			if (LTRBSos(row, col)) {
+				points++;
+			}
+
+			if (RTLBSos(row, col)) {
+				points++;
+			}
 		}
 	}
 
 	return points;
+}
+
+bool Game::VerticalSos(int row, int col) {
+	if (col >= m_Width) return false;
+	if (col < 0) return false;
+	if (row < 0) return false;
+	if (row + 2 >= m_Height) false;
+
+	bool o_recent = false;
+	bool s_recent = false;
+
+	bool sos_available = false;
+
+	if (m_Map[(row + 1) * m_Width + col] == KEY_O) {
+		o_recent = true;
+	}
+
+	if (m_Map[(row + 2) * m_Width + col] == KEY_S) {
+		s_recent = true;
+	}
+
+	if (o_recent && s_recent) {
+		if (!m_SosMap[row * m_Width + col]
+			|| !m_SosMap[(row + 1) * m_Width + col]
+			|| !m_SosMap[(row + 2) * m_Width + col]) {
+			m_SosMap[row * m_Width + col] = true;
+			m_SosMap[(row + 1) * m_Width + col] = true;
+			m_SosMap[(row + 2) * m_Width + col] = true;
+			sos_available = true;
+		}
+	}
+
+	return sos_available;
+}
+
+bool Game::HorizontalSos(int row, int col) {
+	if (col + 2 >= m_Width) return false;
+	if (col < 0) return false;
+	if (row < 0) return false;
+	if (row >= m_Height) false;
+
+	bool o_recent = false;
+	bool s_recent = false;
+
+	bool sos_available = false;
+
+	if (m_Map[row * m_Width + col + 1] == KEY_O) {
+		o_recent = true;
+	}
+
+	if (m_Map[row * m_Width + col + 2] == KEY_S) {
+		s_recent = true;
+	}
+
+	if (o_recent && s_recent) {
+		if (!m_SosMap[row * m_Width + col]
+			|| !m_SosMap[row * m_Width + col + 1]
+			|| !m_SosMap[row* m_Width + col + 2]) {
+			m_SosMap[row * m_Width + col] = true;
+			m_SosMap[row * m_Width + col + 1] = true;
+			m_SosMap[row * m_Width + col + 2] = true;
+			sos_available = true;
+		}
+	}
+
+	return sos_available;
+}
+
+bool Game::LTRBSos(int row, int col) {
+	if (col + 2 >= m_Width) return false;
+	if (col < 0) return false;
+	if (row < 0) return false;
+	if (row + 2 >= m_Height) false;
+
+	bool o_recent = false;
+	bool s_recent = false;
+
+	bool sos_available = false;
+
+	if (m_Map[(row + 1) * m_Width + col + 1] == KEY_O) {
+		o_recent = true;
+	}
+
+	if (m_Map[(row + 2) * m_Width + col + 2] == KEY_S) {
+		s_recent = true;
+	}
+
+	if (o_recent && s_recent) {
+		if (!m_SosMap[row * m_Width + col]
+			|| !m_SosMap[(row + 1) * m_Width + col + 1]
+			|| !m_SosMap[(row + 2) * m_Width + col + 2]) {
+			m_SosMap[row * m_Width + col] = true;
+			m_SosMap[(row + 1) * m_Width + col + 1] = true;
+			m_SosMap[(row + 2)* m_Width + col + 2] = true;
+			sos_available = true;
+		}
+	}
+
+	return sos_available;
+}
+
+bool Game::RTLBSos(int row, int col) {
+	if (col >= m_Width) return false;
+	if (col - 2 < 0) return false;
+	if (row < 0) return false;
+	if (row + 2 >= m_Height) false;
+
+	bool o_recent = false;
+	bool s_recent = false;
+
+	bool sos_available = false;
+
+	if (m_Map[(row + 1) * m_Width + col - 1] == KEY_O) {
+		o_recent = true;
+	}
+
+	if (m_Map[(row + 2) * m_Width + col - 2] == KEY_S) {
+		s_recent = true;
+	}
+
+	if (o_recent && s_recent) {
+		if (!m_SosMap[row * m_Width + col]
+			|| !m_SosMap[(row + 1) * m_Width + col - 1]
+			|| !m_SosMap[(row + 2) * m_Width + col - 2]) {
+			m_SosMap[row * m_Width + col] = true;
+			m_SosMap[(row + 1) * m_Width + col - 1] = true;
+			m_SosMap[(row + 2) * m_Width + col - 2] = true;
+			sos_available = true;
+		}
+	}
+
+	return sos_available;
 }

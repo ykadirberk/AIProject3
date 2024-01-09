@@ -30,6 +30,14 @@ class Game {
 		std::shared_ptr<Player> player1;
 		std::shared_ptr<Player> player2;
 
+		int m_Player1Score = 0;
+		int m_Player2Score = 0;
+
 		bool Apply(Move t_m);
 		int CheckForSOS();
+
+		bool VerticalSos(int row, int col);
+		bool HorizontalSos(int row, int col);
+		bool LTRBSos(int row, int col); // left-top right-bottom sos
+		bool RTLBSos(int row, int col); // right-top left-bottom sos
 };
