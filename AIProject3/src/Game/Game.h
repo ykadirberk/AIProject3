@@ -2,15 +2,23 @@
 
 #include "../Utils.h"
 #include "../Player/Player.h"
+#include "../HumanPlayer/HumanPlayer.h"
+#include "../CpuPlayer/CpuPlayer.h"
+
 
 #include <vector>
 #include <memory>
 #include <iostream>
 
 
+enum class PlayerType {
+	HUMAN_PLAYER,
+	AI_PLAYER
+};
+
 class Game {
 	public:
-		Game(int t_width, int t_height, std::shared_ptr<Player> t_player1, std::shared_ptr<Player> t_player2);
+		Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2);
 		~Game();
 
 		void Render();
@@ -21,6 +29,8 @@ class Game {
 	private:
 		std::vector<int> m_Map;
 		std::vector<bool> m_SosMap;
+
+		std::shared_ptr<StateHandler> m_StateHandler;
 		
 		int m_Width;
 		int m_Height;

@@ -8,8 +8,14 @@ CpuPlayer::CpuPlayer() {
 	m_Name = ss.str();
 	m_PlayerCount++;
 }
-Move CpuPlayer::MakeMove() {
-	return Move();
+Move CpuPlayer::MakeMove(StateHandler& handler) {
+
+	Move t;
+	t.pos_x = 0;
+	t.pos_y = 0;
+	t.key = Move::CastStr("S");
+
+	return t;
 }
 
 std::string CpuPlayer::GetName()

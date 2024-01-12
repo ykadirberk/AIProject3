@@ -1,13 +1,16 @@
 #pragma once
 
 #include "../Player/Player.h"
+#include "../StateHandler/StateHandler.h"
+
+#include <memory>
 
 class CpuPlayer : public Player {
 	public:
 		CpuPlayer();
 		virtual ~CpuPlayer() {}
 
-		Move MakeMove() override;
+		Move MakeMove(StateHandler& handler) override;
 		std::string GetName() override;
 		
 	private:

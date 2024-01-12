@@ -1,12 +1,9 @@
 #include "Game.h"
 
-Game::Game(int t_width, int t_height, std::shared_ptr<Player> t_player1, std::shared_ptr<Player> t_player2) {
+Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2) {
 	m_Width = t_width;
 	m_Height = t_height;
 
-	player1 = t_player1;
-	player2 = t_player2;
-	
 	// fill the map with empty space
 	m_Map.reserve(m_Width * m_Height);
 	for (int i = 0; i < m_Width * m_Height; i++) {
@@ -23,6 +20,22 @@ Game::Game(int t_width, int t_height, std::shared_ptr<Player> t_player1, std::sh
 	m_Map[m_Width - 1] = KEY_S;
 	m_Map[m_Width * (m_Height - 1)] = KEY_S;
 	m_Map[m_Width * m_Height - 1] = KEY_S;
+
+	m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height);
+
+	if (t_player1 == PlayerType::HUMAN_PLAYER) {
+		player1 = std::make_shared<HumanPlayer>();
+	}
+	else {
+		player1 = std::make_shared<CpuPlayer>();
+	}
+
+	if (t_player2 == PlayerType::HUMAN_PLAYER) {
+		player2 = std::make_shared<HumanPlayer>();
+	}
+	else {
+		player2 = std::make_shared<CpuPlayer>();
+	}
 }
 
 Game::~Game() {
@@ -73,7 +86,7 @@ void Game::Input() {
 	if (!m_Turn) {
 		while (1) {
 			std::cout << player1->GetName() << " >> " << std::endl;
-			auto move = player1->MakeMove();
+			auto move = player1->MakeMove(*m_StateHandler);
 			if (Apply(move)) {
 				m_Player1Score += CheckForSOS();
 				break;
@@ -84,7 +97,7 @@ void Game::Input() {
 	} else {
 		while (1) {
 			std::cout << player2->GetName() << " >> " << std::endl;
-			auto move = player2->MakeMove();
+			auto move = player2->MakeMove(*m_StateHandler);
 			if (Apply(move)) {
 				m_Player2Score += CheckForSOS();
 				break;

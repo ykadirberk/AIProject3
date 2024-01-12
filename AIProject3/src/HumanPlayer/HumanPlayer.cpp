@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 HumanPlayer::HumanPlayer() {
 	std::stringstream ss;
@@ -10,7 +11,7 @@ HumanPlayer::HumanPlayer() {
 	m_PlayerCount++;
 }
 
-Move HumanPlayer::MakeMove() {
+Move HumanPlayer::MakeMove(StateHandler& handler) {
 	std::string line;
 	std::getline(std::cin, line);
 	

@@ -8,6 +8,7 @@
 class Move {
 	public:
 		Move() {}
+		Move(int t_pos_x, int t_pos_y, int t_key) : pos_x(t_pos_x), pos_y(t_pos_y), key(t_key) {}
 		~Move() {}
 		int pos_x = 0;
 		int pos_y = 0;
