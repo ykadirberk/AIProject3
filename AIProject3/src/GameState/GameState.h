@@ -18,21 +18,21 @@ class GameState {
 		std::vector<std::shared_ptr<GameState>>& GetNextStates();
 		std::vector<int>& GetCurrentState();
 		
+		/*std::shared_ptr<GameState> GetParent();
+		void SetParent(std::shared_ptr<GameState> t_parent);*/
+
 		Move GetMove();
 		
 		int GetScore();
-
-		int GetMinPlayerScore();
-		void SetMinPlayerScore(int t_score);
-		int GetMaxPlayerScore();
-		void SetMaxPlayerScore(int t_score);
+		void SetScore(int t_score);
 
 		StateType GetStateType();
 		void SetStateType(StateType t_state);
+
+		int GetWidth() { return m_Width; }
+		int GetHeight() { return m_Height; }
 		
 	private:
-		int m_ScoreMaxPlayer;
-		int m_ScoreMinPlayer;
 		int m_Score = 0;
 		StateType m_StateType;
 		Move m_Move;
@@ -40,7 +40,7 @@ class GameState {
 		int m_Width;
 		int m_Height;
 
-		std::weak_ptr<GameState> m_ParentState;
+		//std::shared_ptr<GameState> m_ParentState;
 		std::vector<std::shared_ptr<GameState>> m_NextStates;
 		std::vector<int> m_CurrentState;
 

@@ -86,6 +86,7 @@
     <ClCompile Include="src\GameState\GameState.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\Heuristic\PunisherHeuristic\PunisherHeuristic.cpp" />
+    <ClCompile Include="src\Heuristic\SimpleHeuristic\SimpleHeuristic.cpp" />
     <ClCompile Include="src\HumanPlayer\HumanPlayer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StateHandler\StateHandler.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\Heuristic\Heuristic.h" />
     <ClInclude Include="src\Heuristic\PunisherHeuristic\PunisherHeuristic.h" />
+    <ClInclude Include="src\Heuristic\SimpleHeuristic\SimpleHeuristic.h" />
     <ClInclude Include="src\HumanPlayer\HumanPlayer.h" />
     <ClInclude Include="src\Move\Move.h" />
     <ClInclude Include="src\Player\Player.h" />

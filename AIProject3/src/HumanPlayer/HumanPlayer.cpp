@@ -11,7 +11,7 @@ HumanPlayer::HumanPlayer() {
 	m_PlayerCount++;
 }
 
-Move HumanPlayer::MakeMove(StateHandler& handler) {
+Move HumanPlayer::MakeMove(std::shared_ptr<StateHandler> handler, std::vector<int>& t_current) {
 	std::string line;
 	std::getline(std::cin, line);
 	

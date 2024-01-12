@@ -1,6 +1,7 @@
 #include "CpuPlayer.h"
 
 #include <sstream>
+#include <iostream>
 
 CpuPlayer::CpuPlayer() {
 	std::stringstream ss;
@@ -8,12 +9,14 @@ CpuPlayer::CpuPlayer() {
 	m_Name = ss.str();
 	m_PlayerCount++;
 }
-Move CpuPlayer::MakeMove(StateHandler& handler) {
+Move CpuPlayer::MakeMove(std::shared_ptr<StateHandler> handler, std::vector<int>& t_current) {
 
-	Move t;
-	t.pos_x = 0;
-	t.pos_y = 0;
-	t.key = Move::CastStr("S");
+	handler->GenerateNewPlays(t_current);
+
+	Move t = handler->ChoosePlay();
+
+	std::cout << "(" << t.pos_y << ", " << t.pos_x << ") -> " << Move::CastKey(t.key) << std::endl;
+	std::cin.get();
 
 	return t;
 }

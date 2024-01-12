@@ -1,18 +1,18 @@
 #include "Game.h"
 
-Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2) {
+Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic_type) {
 	m_Width = t_width;
 	m_Height = t_height;
 
 	// fill the map with empty space
 	m_Map.reserve(m_Width * m_Height);
 	for (int i = 0; i < m_Width * m_Height; i++) {
-		m_Map[i] = KEY_EMPTY;
+		m_Map.push_back(KEY_EMPTY);
 	}
 
 	m_SosMap.reserve(m_Width * m_Height);
 	for (int i = 0; i < m_Width * m_Height; i++) {
-		m_SosMap[i] = false;
+		m_SosMap.push_back(false);
 	}
 
 	// put S key on corners
@@ -21,7 +21,13 @@ Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2
 	m_Map[m_Width * (m_Height - 1)] = KEY_S;
 	m_Map[m_Width * m_Height - 1] = KEY_S;
 
-	m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height);
+	if (t_heuristic_type == HeuristicType::SIMPLE_HEURISTIC) {
+		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<SimpleHeuristic>());
+	} else {
+		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<PunisherHeuristic>());
+	}
+
+	
 
 	if (t_player1 == PlayerType::HUMAN_PLAYER) {
 		player1 = std::make_shared<HumanPlayer>();
@@ -85,8 +91,8 @@ void Game::Render() {
 void Game::Input() {
 	if (!m_Turn) {
 		while (1) {
-			std::cout << player1->GetName() << " >> " << std::endl;
-			auto move = player1->MakeMove(*m_StateHandler);
+			std::cout << player1->GetName() << " >> ";
+			Move move = player1->MakeMove(m_StateHandler, m_Map);
 			if (Apply(move)) {
 				m_Player1Score += CheckForSOS();
 				break;
@@ -96,8 +102,8 @@ void Game::Input() {
 		}
 	} else {
 		while (1) {
-			std::cout << player2->GetName() << " >> " << std::endl;
-			auto move = player2->MakeMove(*m_StateHandler);
+			std::cout << player2->GetName() << " >> ";
+			Move move = player2->MakeMove(m_StateHandler, m_Map);
 			if (Apply(move)) {
 				m_Player2Score += CheckForSOS();
 				break;

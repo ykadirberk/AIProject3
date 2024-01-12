@@ -4,7 +4,8 @@
 #include "../Player/Player.h"
 #include "../HumanPlayer/HumanPlayer.h"
 #include "../CpuPlayer/CpuPlayer.h"
-
+#include "../Heuristic/SimpleHeuristic/SimpleHeuristic.h"
+#include "../Heuristic/PunisherHeuristic/PunisherHeuristic.h"
 
 #include <vector>
 #include <memory>
@@ -16,9 +17,14 @@ enum class PlayerType {
 	AI_PLAYER
 };
 
+enum class HeuristicType {
+	SIMPLE_HEURISTIC,
+	PUNISHER_HEURISTIC
+};
+
 class Game {
 	public:
-		Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2);
+		Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic_type);
 		~Game();
 
 		void Render();

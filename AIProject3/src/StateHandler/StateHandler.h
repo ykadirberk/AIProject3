@@ -8,11 +8,11 @@
 
 class StateHandler {
 	public:
-		StateHandler(std::vector<int> t_current, int t_width, int t_height);
+		StateHandler(std::vector<int>& t_current, int t_width, int t_height, std::shared_ptr<Heuristic> t_heuristic);
 		~StateHandler();
 
 		Move ChoosePlay();
-		void GenerateNewPlays(std::vector<int> t_current);
+		void GenerateNewPlays(std::vector<int>& t_current);
 
 	private:
 

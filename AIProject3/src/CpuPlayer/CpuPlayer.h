@@ -10,7 +10,7 @@ class CpuPlayer : public Player {
 		CpuPlayer();
 		virtual ~CpuPlayer() {}
 
-		Move MakeMove(StateHandler& handler) override;
+		Move MakeMove(std::shared_ptr<StateHandler> handler, std::vector<int>& t_current) override;
 		std::string GetName() override;
 		
 	private:
