@@ -31,6 +31,7 @@ class Game {
 		void Input();
 
 		bool IsEnded();
+		void DeclareWinner();
 
 	private:
 		std::vector<int> m_Map;

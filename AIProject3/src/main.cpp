@@ -5,6 +5,7 @@
 #include "HumanPlayer/HumanPlayer.h"
 
 int main() {
+
 	Game game(5, 5, PlayerType::HUMAN_PLAYER, PlayerType::AI_PLAYER, HeuristicType::SIMPLE_HEURISTIC);
 	
 	while (!game.IsEnded()) {
@@ -13,6 +14,7 @@ int main() {
 	}
 
 	game.Render();
+	game.DeclareWinner();
 	
 	return 0;
 }

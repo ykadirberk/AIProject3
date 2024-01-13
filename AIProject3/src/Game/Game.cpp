@@ -124,6 +124,20 @@ bool Game::IsEnded() {
 	return true;
 }
 
+void Game::DeclareWinner()
+{
+	int winner = m_Player1Score - m_Player2Score;
+	if (winner > 0) {
+		std::cout << std::endl << player1->GetName() << " wins!" << std::endl;
+	}
+	if (winner < 0) {
+		std::cout << std::endl << player2->GetName() << " wins!" << std::endl;
+	}
+	if (winner == 0) {
+		std::cout << std::endl << "It's a draw!" << std::endl;
+	}
+}
+
 bool Game::Apply(Move t_m) {
 	// if positions are out of board
 	if (t_m.pos_x > m_Width || t_m.pos_y > m_Height) {
