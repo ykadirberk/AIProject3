@@ -1,11 +1,14 @@
 #include "SimpleHeuristic.h"
 
+#include <iostream>
+
 SimpleHeuristic::SimpleHeuristic()
 {
 }
 
 int SimpleHeuristic::Evaluate(std::shared_ptr<GameState> t_state) {
-	int base_score = t_state->GetScore();
+	//int base_score = t_state->GetScore();
+	int base_score = 0;
 	int sos = CheckSos(t_state);
 
 	if (t_state->GetStateType() == StateType::TYPE_MAX) {
@@ -13,7 +16,6 @@ int SimpleHeuristic::Evaluate(std::shared_ptr<GameState> t_state) {
 	} else {
 		base_score = base_score + sos;
 	}
-
 	return base_score;
 }
 
@@ -21,6 +23,7 @@ int SimpleHeuristic::CheckSos(std::shared_ptr<GameState> t_state) {
 	int score = 0;
 	auto move = t_state->GetMove();
 	auto map = t_state->GetCurrentState();
+	
 
 	// horizontal to the left
 	if (move.pos_x - 3 >= 0

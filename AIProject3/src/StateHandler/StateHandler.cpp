@@ -76,48 +76,97 @@ void StateHandler::RecursiveCreate(std::shared_ptr<GameState> t_root, int t_dept
 
 }
 
+#include <iostream>
+
+//int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score) {
+//
+//	int heuristic_value = 0;
+//	if (t_root->GetStateType() == StateType::TYPE_MAX) {
+//		heuristic_value = t_score - heuristic->Evaluate(t_root);
+//	} else {
+//		heuristic_value = t_score + heuristic->Evaluate(t_root);
+//	}
+//
+//	if (t_depth == 4) {
+//		return heuristic_value; // apply heuristic to the root
+//	}
+//
+//	//t_root->SetScore(0);
+//
+//	auto& states = t_root->GetNextStates();
+//	
+//	int minmax;
+//	if (t_root->GetStateType() == StateType::TYPE_MAX) {
+//		minmax = INT_MIN;
+//		for (auto& state : states) {
+//			int val = RecursiveAssignPoints(state, t_depth + 1, minmax, min_prune, 0);
+//			if (t_depth == 0) {
+//				std::cout << state->GetMove().pos_y << ", " << state->GetMove().pos_x << " " << Move::CastKey(state->GetMove().key) << " : " << val << std::endl;
+//			}
+//			state->SetScore(val);
+//			if (val > min_prune) {
+//				return val;
+//			}
+//			if (val > minmax) {
+//				minmax = val;
+//			}
+//		}
+//	} else {
+//		minmax = INT_MAX;
+//		for (auto& state : states) {
+//			int val = RecursiveAssignPoints(state, t_depth + 1, max_prune, minmax, 0);
+//			state->SetScore(val);
+//			if (t_depth == 0) {
+//				std::cout << state->GetMove().pos_y << ", " << state->GetMove().pos_x << " " << Move::CastKey(state->GetMove().key) << " : " << val << std::endl;
+//			}
+//			if (val < max_prune) {
+//				return val;
+//			}
+//			if (val < minmax) {
+//				minmax = val;
+//			}
+//		}
+//	}
+//	return minmax;
+//}
+
 int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score) {
-
-	int heuristic_value = 0; 
-	if (t_root->GetStateType() == StateType::TYPE_MAX) {
-		heuristic_value = t_score + heuristic->Evaluate(t_root);
-	} else {
-		heuristic_value = t_score - heuristic->Evaluate(t_root);
-	}
+	int heuristic_val = t_score + heuristic->Evaluate(t_root);
 	if (t_depth == 4) {
-		return heuristic_value; // apply heuristic to the root
+		return heuristic_val;
 	}
 
-	//t_root->SetScore(0);
+	t_root->SetScore(heuristic_val);
 
 	auto& states = t_root->GetNextStates();
-	
 	int minmax;
 	if (t_root->GetStateType() == StateType::TYPE_MAX) {
 		minmax = INT_MIN;
-		for (auto& state : states) {
-			int val = RecursiveAssignPoints(state, t_depth + 1, minmax, min_prune, heuristic_value);
+		for (auto state : states) {
+			int val = RecursiveAssignPoints(state, t_depth+1, minmax, min_prune, t_root->GetScore());
 			state->SetScore(val);
 			if (val > min_prune) {
 				return val;
 			}
-			if (state->GetScore() > minmax) {
-				minmax = state->GetScore();
+			if (val > minmax) {
+				minmax = val;
 			}
 		}
 	} else {
 		minmax = INT_MAX;
-		for (auto& state : states) {
-			int val = RecursiveAssignPoints(state, t_depth + 1, max_prune, minmax, heuristic_value);
+		for (auto state : states) {
+			int val = RecursiveAssignPoints(state, t_depth + 1, max_prune, minmax, t_root->GetScore());
 			state->SetScore(val);
 			if (val < max_prune) {
 				return val;
 			}
-			if (state->GetScore() < minmax) {
-				minmax = state->GetScore();
+			if (val < minmax) {
+				minmax = val;
 			}
 		}
+
 	}
+
 	return minmax;
 }
 

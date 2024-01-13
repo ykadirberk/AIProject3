@@ -5,7 +5,8 @@ PunisherHeuristic::PunisherHeuristic()
 }
 
 int PunisherHeuristic::Evaluate(std::shared_ptr<GameState> t_state) {
-	int base_score = t_state->GetScore();
+	//int base_score = t_state->GetScore();
+	int base_score = 0;
 	int punishment = 0;
 	if (t_state->GetMove().key == KEY_S) {
 		punishment = CheckPunishmentKeyS(t_state);
@@ -16,9 +17,9 @@ int PunisherHeuristic::Evaluate(std::shared_ptr<GameState> t_state) {
 	int sos = CheckSos(t_state);
 
 	if (t_state->GetStateType() == StateType::TYPE_MAX) {
-		base_score = base_score + punishment * 100 - sos;
+		base_score = base_score + punishment * 2 - sos * 4;
 	} else {
-		base_score = base_score - punishment * 100 + sos;
+		base_score = base_score - punishment * 1 + sos * 4;
 	}
 
 	return base_score;
