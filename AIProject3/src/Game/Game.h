@@ -24,7 +24,7 @@ enum class HeuristicType {
 
 class Game {
 	public:
-		Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic_type);
+		Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic1_type, HeuristicType t_heuristic2_type);
 		~Game();
 
 		void Render();

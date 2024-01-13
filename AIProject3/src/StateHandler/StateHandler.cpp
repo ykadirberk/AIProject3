@@ -134,7 +134,6 @@ void StateHandler::RecursiveCreate(std::shared_ptr<GameState> t_root, int t_dept
 int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score) {
 
 	int heuristic_val;
-	// uncomment if ai vs ai
 	if (t_root->GetStateType() == StateType::TYPE_MAX) {
 		heuristic_val = t_score + heuristic1->Evaluate(t_root);
 	} else {
