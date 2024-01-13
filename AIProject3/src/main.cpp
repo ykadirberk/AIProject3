@@ -5,7 +5,7 @@
 #include "HumanPlayer/HumanPlayer.h"
 
 int main() {
-	Game game(5, 5, PlayerType::AI_PLAYER, PlayerType::AI_PLAYER, HeuristicType::PUNISHER_HEURISTIC);
+	Game game(5, 5, PlayerType::AI_PLAYER, PlayerType::AI_PLAYER, HeuristicType::SIMPLE_HEURISTIC);
 	
 	while (!game.IsEnded()) {
 		game.Render();

@@ -25,9 +25,7 @@ Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2
 		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<SimpleHeuristic>());
 	} else {
 		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<PunisherHeuristic>());
-	}
-
-	
+	} 
 
 	if (t_player1 == PlayerType::HUMAN_PLAYER) {
 		player1 = std::make_shared<HumanPlayer>();

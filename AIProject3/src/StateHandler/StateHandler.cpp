@@ -5,6 +5,7 @@ StateHandler::StateHandler(std::vector<int>& t_current, int t_width, int t_heigh
 	Move m;
 	m.pos_x = 1;
 	m.pos_y = 1;
+	m.key = KEY_S;
 	m_Root = std::make_shared<GameState>(nullptr, m, m_Width, m_Height);
 	GenerateNewPlays(t_current);
 }
@@ -15,14 +16,19 @@ StateHandler::~StateHandler() {
 
 Move StateHandler::ChoosePlay() {
 
-	int score_to_go = RecursiveAssignPoints(m_Root, 0, INT_MIN, INT_MAX);
+	int score_to_go = RecursiveAssignPoints(m_Root, 0, INT_MIN, INT_MAX, m_Root->GetScore());
 
-	auto& states = m_Root->GetNextStates();
+	auto states = m_Root->GetNextStates();
+
+
 	for (auto& state : states) {
 		if (state->GetScore() == score_to_go) {
 			m_Root = state;
+			auto mv = state->GetMove();
 			//m_Root->SetParent(nullptr);
-			return m_Root->GetMove();
+			//GenerateNewPlays(state->GetCurrentState());
+			//return m_Root->GetMove();
+			return mv;
 		}
 	}
 	return Move(1, 1, KEY_S);
@@ -50,31 +56,39 @@ void StateHandler::RecursiveCreate(std::shared_ptr<GameState> t_root, int t_dept
 	}
 
 	auto& states = t_root->GetNextStates();
-	if (states.size() == 0) {
-		auto& map = t_root->GetCurrentState();
-		for (int i = 0; i < m_Height; i++) {
-			for (int j = 0; j < m_Width; j++) {
-				if (map[i * m_Width + j] == KEY_EMPTY) {
-					std::shared_ptr<GameState> temp1 = std::make_shared<GameState>(t_root, Move(i + 1, j + 1, KEY_O), m_Width, m_Height);
-					RecursiveCreate(temp1, t_depth + 1);
-					states.push_back(temp1);
-
-					std::shared_ptr<GameState> temp2 = std::make_shared<GameState>(t_root, Move(i + 1, j + 1, KEY_S), m_Width, m_Height);
-					RecursiveCreate(temp2, t_depth + 1);
-					states.push_back(temp2);
-				}
+	states.clear();
+	auto& map = t_root->GetCurrentState();
+	for (int i = 0; i < m_Height; i++) {
+		for (int j = 0; j < m_Width; j++) {
+			if (map[i * m_Width + j] != KEY_EMPTY) {
+				continue;
 			}
+			std::shared_ptr<GameState> temp1 = std::make_shared<GameState>(t_root, Move(j + 1, i + 1, KEY_O), m_Width, m_Height);
+			states.push_back(temp1);
+
+			std::shared_ptr<GameState> temp2 = std::make_shared<GameState>(t_root, Move(j + 1, i + 1, KEY_S), m_Width, m_Height);
+			states.push_back(temp2);
+			
+			RecursiveCreate(temp1, t_depth + 1);
+			RecursiveCreate(temp2, t_depth + 1);
 		}
 	}
+
 }
 
-int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune) {
+int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score) {
 
+	int heuristic_value = 0; 
+	if (t_root->GetStateType() == StateType::TYPE_MAX) {
+		heuristic_value = t_score + heuristic->Evaluate(t_root);
+	} else {
+		heuristic_value = t_score - heuristic->Evaluate(t_root);
+	}
 	if (t_depth == 4) {
-		return heuristic->Evaluate(t_root); // apply heuristic to the root
+		return heuristic_value; // apply heuristic to the root
 	}
 
-	//t_root->SetScore(heuristic_value);
+	//t_root->SetScore(0);
 
 	auto& states = t_root->GetNextStates();
 	
@@ -82,7 +96,7 @@ int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t
 	if (t_root->GetStateType() == StateType::TYPE_MAX) {
 		minmax = INT_MIN;
 		for (auto& state : states) {
-			int val = RecursiveAssignPoints(state, t_depth + 1, minmax, min_prune);
+			int val = RecursiveAssignPoints(state, t_depth + 1, minmax, min_prune, heuristic_value);
 			state->SetScore(val);
 			if (val > min_prune) {
 				return val;
@@ -94,7 +108,7 @@ int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t
 	} else {
 		minmax = INT_MAX;
 		for (auto& state : states) {
-			int val = RecursiveAssignPoints(state, t_depth + 1, max_prune, minmax);
+			int val = RecursiveAssignPoints(state, t_depth + 1, max_prune, minmax, heuristic_value);
 			state->SetScore(val);
 			if (val < max_prune) {
 				return val;

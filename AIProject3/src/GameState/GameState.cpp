@@ -7,8 +7,7 @@ GameState::GameState(std::shared_ptr<GameState> t_parent, Move t_move, int t_wid
 	m_Move = t_move; 
 	m_Score = 0;
 
-	if (t_parent == nullptr) {
-		//m_ParentState = nullptr;
+	if (!t_parent) {
 		m_StateType = StateType::TYPE_MAX;
 		//m_Score = INT_MAX;
 
@@ -16,7 +15,6 @@ GameState::GameState(std::shared_ptr<GameState> t_parent, Move t_move, int t_wid
 		for (int row = 0; row < m_Height; row++) {
 			for (int col = 0; col < m_Width; col++) {
 				m_CurrentState.push_back(KEY_EMPTY);
-				//m_CurrentState[row * m_Width + col] = KEY_EMPTY;
 			}
 		}
 		m_CurrentState[0] = KEY_S;
@@ -25,7 +23,6 @@ GameState::GameState(std::shared_ptr<GameState> t_parent, Move t_move, int t_wid
 		m_CurrentState[m_Height * m_Width - 1] = KEY_S;
 
 	} else {
-		//m_ParentState = t_parent;
 		if (t_parent->GetStateType() == StateType::TYPE_MAX) {
 			m_StateType = StateType::TYPE_MIN;
 			//m_Score = INT_MIN;
@@ -53,15 +50,6 @@ std::vector<std::shared_ptr<GameState>>& GameState::GetNextStates() {
 std::vector<int>& GameState::GetCurrentState() {
 	return m_CurrentState;
 }
-//
-//std::shared_ptr<GameState> GameState::GetParent()
-//{
-//	return m_ParentState;
-//}
-//
-//void GameState::SetParent(std::shared_ptr<GameState> t_parent) {
-//	m_ParentState = t_parent;
-//}
 
 Move GameState::GetMove() {
 	return m_Move;

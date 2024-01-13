@@ -16,14 +16,13 @@ int PunisherHeuristic::Evaluate(std::shared_ptr<GameState> t_state) {
 	int sos = CheckSos(t_state);
 
 	if (t_state->GetStateType() == StateType::TYPE_MAX) {
-		base_score = base_score - punishment * 2 + sos;
+		base_score = base_score + punishment * 100 - sos;
 	} else {
-		base_score = base_score + punishment * 2 - sos;
+		base_score = base_score - punishment * 100 + sos;
 	}
 
 	return base_score;
 }
-
 int PunisherHeuristic::CheckSos(std::shared_ptr<GameState> t_state) {
 	int score = 0;
 	auto move = t_state->GetMove();
@@ -102,22 +101,6 @@ int PunisherHeuristic::CheckSos(std::shared_ptr<GameState> t_state) {
 		score++;
 	}
 
-	// horizontal to the right
-	if (move.pos_x + 1 < t_state->GetWidth() && move.pos_x - 2 >= 0
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x] == KEY_S
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 2] == KEY_S) {
-		score++;
-	}
-
-	// vertical to the top
-	if (move.pos_y - 2 >= 0 && move.pos_y < t_state->GetHeight()
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
-		&& map[(move.pos_y - 2) * t_state->GetWidth() + move.pos_x - 1] == KEY_S
-		&& map[(move.pos_y) * t_state->GetWidth() + move.pos_x - 1] == KEY_S) {
-		score++;
-	}
-
 	// vertical to the bottom
 	if (move.pos_y + 1 < t_state->GetHeight() && move.pos_y - 2 >= 0
 		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
@@ -125,28 +108,11 @@ int PunisherHeuristic::CheckSos(std::shared_ptr<GameState> t_state) {
 		&& map[(move.pos_y - 2) * t_state->GetWidth() + move.pos_x - 1] == KEY_S) {
 		score++;
 	}
-
-	// diagonal to the bottom right
-	if (move.pos_y - 2 >= 0 && move.pos_y + 1 < t_state->GetHeight() && move.pos_x + 1 < t_state->GetWidth() && move.pos_x - 2 >= 0
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
-		&& map[(move.pos_y) * t_state->GetWidth() + move.pos_x] == KEY_S
-		&& map[(move.pos_y - 2) * t_state->GetWidth() + move.pos_x - 2] == KEY_S) {
-		score++;
-	}
-
 	// diagonal to the top left
 	if (move.pos_y + 1 < t_state->GetHeight() && move.pos_y - 2 >= 0 && move.pos_x + 1 < t_state->GetWidth() && move.pos_x - 2 >= 0
 		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
 		&& map[(move.pos_y - 2) * t_state->GetWidth() + move.pos_x - 2] == KEY_S
 		&& map[(move.pos_y) * t_state->GetWidth() + move.pos_x] == KEY_S) {
-		score++;
-	}
-
-	// diagonal to the bottom left
-	if (move.pos_y - 2 >= 0 && move.pos_y + 1 < t_state->GetHeight() && move.pos_x + 1 < t_state->GetWidth() && move.pos_x - 2 >= 0
-		&& map[(move.pos_y - 1) * t_state->GetWidth() + move.pos_x - 1] == KEY_O
-		&& map[(move.pos_y) * t_state->GetWidth() + move.pos_x - 2] == KEY_S
-		&& map[(move.pos_y - 2) * t_state->GetWidth() + move.pos_x] == KEY_S) {
 		score++;
 	}
 
