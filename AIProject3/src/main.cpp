@@ -6,7 +6,7 @@
 
 int main() {
 
-	Game game(5, 5, PlayerType::HUMAN_PLAYER, PlayerType::AI_PLAYER, HeuristicType::SIMPLE_HEURISTIC);
+	Game game(5, 5, PlayerType::HUMAN_PLAYER, PlayerType::AI_PLAYER, HeuristicType::SIMPLE_HEURISTIC, HeuristicType::SIMPLE_HEURISTIC);
 	
 	while (!game.IsEnded()) {
 		game.Render();

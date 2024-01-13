@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic_type) {
+Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2, HeuristicType t_heuristic1_type, HeuristicType t_heuristic2_type) {
 	m_Width = t_width;
 	m_Height = t_height;
 
@@ -21,11 +21,23 @@ Game::Game(int t_width, int t_height, PlayerType t_player1, PlayerType t_player2
 	m_Map[m_Width * (m_Height - 1)] = KEY_S;
 	m_Map[m_Width * m_Height - 1] = KEY_S;
 
-	if (t_heuristic_type == HeuristicType::SIMPLE_HEURISTIC) {
-		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<SimpleHeuristic>());
+	std::shared_ptr<Heuristic> h1 = nullptr;
+	std::shared_ptr<Heuristic> h2 = nullptr;
+
+	if (t_heuristic1_type == HeuristicType::SIMPLE_HEURISTIC) {
+		h1 = std::make_shared<SimpleHeuristic>();
 	} else {
-		m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, std::make_shared<PunisherHeuristic>());
+		h1 = std::make_shared<PunisherHeuristic>();
 	} 
+
+	if (t_heuristic2_type == HeuristicType::SIMPLE_HEURISTIC) {
+		h2 = std::make_shared<SimpleHeuristic>();
+	}
+	else {
+		h2 = std::make_shared<PunisherHeuristic>();
+	}
+
+	m_StateHandler = std::make_shared<StateHandler>(m_Map, m_Width, m_Height, h1, h2);
 
 	if (t_player1 == PlayerType::HUMAN_PLAYER) {
 		player1 = std::make_shared<HumanPlayer>();

@@ -8,7 +8,7 @@
 
 class StateHandler {
 	public:
-		StateHandler(std::vector<int>& t_current, int t_width, int t_height, std::shared_ptr<Heuristic> t_heuristic);
+		StateHandler(std::vector<int>& t_current, int t_width, int t_height, std::shared_ptr<Heuristic> t_heuristic1, std::shared_ptr<Heuristic> t_heuristic2);
 		~StateHandler();
 
 		void GenerateNewPlays(std::vector<int>& t_current);
@@ -20,7 +20,8 @@ class StateHandler {
 		int m_Width;
 		int m_Height;
 
-		std::shared_ptr<Heuristic> heuristic;
+		std::shared_ptr<Heuristic> heuristic1;
+		std::shared_ptr<Heuristic> heuristic2;
 
 		void RecursiveCreate(std::shared_ptr<GameState> t_root, int t_depth);
 		int RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score);

@@ -1,7 +1,8 @@
 #include "StateHandler.h"
 
-StateHandler::StateHandler(std::vector<int>& t_current, int t_width, int t_height, std::shared_ptr<Heuristic> t_heuristic) : m_Width(t_width), m_Height(t_height) {
-	heuristic = t_heuristic;
+StateHandler::StateHandler(std::vector<int>& t_current, int t_width, int t_height, std::shared_ptr<Heuristic> t_heuristic1, std::shared_ptr<Heuristic> t_heuristic2) : m_Width(t_width), m_Height(t_height) {
+	heuristic1 = t_heuristic1;
+	heuristic2 = t_heuristic2;
 	Move m;
 	m.pos_x = 1;
 	m.pos_y = 1;
@@ -131,7 +132,15 @@ void StateHandler::RecursiveCreate(std::shared_ptr<GameState> t_root, int t_dept
 //}
 
 int StateHandler::RecursiveAssignPoints(std::shared_ptr<GameState> t_root, int t_depth, int max_prune, int min_prune, int t_score) {
-	int heuristic_val = t_score + heuristic->Evaluate(t_root);
+
+	int heuristic_val;
+	// uncomment if ai vs ai
+	if (t_root->GetStateType() == StateType::TYPE_MAX) {
+		heuristic_val = t_score + heuristic1->Evaluate(t_root);
+	} else {
+		heuristic_val = t_score + heuristic2->Evaluate(t_root);
+	}
+
 	if (t_depth == 4) {
 		return heuristic_val;
 	}
